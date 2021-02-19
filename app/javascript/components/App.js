@@ -4,10 +4,9 @@ import Processer from './Processer'
 import Validation from './Validation'
 import Progress from './Progress'
 
-let views = ['upload', 'processer', 'validation']
-
 export default function App() {
-    let [data, setData] = useState()
+    let [file, setFile] = useState()
+    let [cols, setCols] = useState()
     let [view, setView] = useState('upload')
     let [includedCols, setIncludedCols] = useState()
     let [assignedCols, setAssignedCols] = useState()
@@ -26,20 +25,39 @@ export default function App() {
         if (view === 'processer') setView('validation')
     }
 
+    let handleUpload = () => {
+        // post 
+        let formData = new FormData()
+        formData.append('file', file)
+        formData.append('included_cols', includedCols)
+        formData.append('assigned_cols', JSON.stringify(assignedCols))
+        fetch('/data', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+
+        // reset state
+        setFile()
+        setCols()
+        setView('upload')
+        setIncludedCols()
+        setAssignedCols()
+    }
+
     return (
         <div style={{width:'718px', height:'700px'}}>
             <Progress 
                 currView={view}
-                pastViews={views.slice(0, views.indexOf(view))}
             />
             {view === 'upload' &&
                 <Upload
-                    retrieveData={setData}
+                    retrieveFile={setFile}
+                    retrieveCols={setCols}
                 />
             }
             {view === 'processer' &&
                 <Processer 
-                    data={data}
+                    cols={cols}
                     retrieveIncludedCols={setIncludedCols}
                     retrieveAssignedCols={setAssignedCols}
                 />
@@ -62,8 +80,8 @@ export default function App() {
                     </button>
                 }
                 {view == 'validation' &&
-                    <button>
-                        Upload another
+                    <button onClick={handleUpload}>
+                        Upload
                     </button>
                 }
             </div>

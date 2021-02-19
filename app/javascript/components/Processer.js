@@ -1,14 +1,13 @@
 import React, {useState, useEffect} from  'react'
 import Select from 'react-select'
 
-export default function Processor({
-    data,
+export default function Processer({
+    cols,
     retrieveIncludedCols,
     retrieveAssignedCols
 }) {
-    let allCols = data[0]['data']
-    let [checkedCols, setCheckedCols] = useState(allCols) 
-    let [availableCols, setAvailableCols] = useState(allCols)
+    let [checkedCols, setCheckedCols] = useState(cols) 
+    let [availableCols, setAvailableCols] = useState(cols)
     let [assignedCols, setAssignedCols] = useState({
         'ID': null, 'Name': null, 'Timestamp': null 
     })
@@ -18,6 +17,9 @@ export default function Processor({
         retrieveAssignedCols(assignedCols)
     }, [assignedCols, checkedCols])
 
+    // figure out how to allow previously assigned cols
+    // to still be assignable after switching
+    // use diff ds in state?
     let handleColCheck = colname => {
         let checkedColsCopy =  [...checkedCols]
         if (checkedCols.includes(colname)) {
@@ -47,7 +49,7 @@ export default function Processor({
             <div>
                 <h3>Exclude columns by untoggling the checkbox.</h3>
                 <div style={{display:'flex', flexDirection:'column'}}>
-                    {allCols.map(col => {
+                    {cols.map(col => {
                         return (
                             <div key={col}>
                                 <input 

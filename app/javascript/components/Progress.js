@@ -18,7 +18,6 @@ let labelStyle = {
 
 export default function Progress({
     currView, // string
-    pastViews // array
 }) {
     let viewLabelMap = {
         'upload': 'Upload dataset',
