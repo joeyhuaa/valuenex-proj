@@ -17,9 +17,6 @@ export default function Processer({
         retrieveAssignedCols(assignedCols)
     }, [assignedCols, checkedCols])
 
-    // figure out how to allow previously assigned cols
-    // to still be assignable after switching
-    // use diff ds in state?
     let handleColCheck = colname => {
         let checkedColsCopy =  [...checkedCols]
         if (checkedCols.includes(colname)) {

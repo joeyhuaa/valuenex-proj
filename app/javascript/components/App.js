@@ -75,7 +75,7 @@ export default function App() {
                     </button>
                 }
                 {view !== 'validation' &&
-                    <button onClick={handleNext} style={{float:'right'}} disabled={file ? false : true}>
+                    <button onClick={handleNext} disabled={file ? false : true}>
                         Next
                     </button>
                 }
