@@ -3,6 +3,7 @@ import Upload from './Upload'
 import Processer from './Processer'
 import Validation from './Validation'
 import Progress from './Progress'
+const papa = require('papaparse')
 
 export default function App() {
     let [file, setFile] = useState()
@@ -11,6 +12,21 @@ export default function App() {
     let [includedCols, setIncludedCols] = useState()
     let [assignedCols, setAssignedCols] = useState()
     let [canUpload, setCanUpload] = useState(false)
+
+    /*
+    [
+        {
+            colname: id
+            included: true
+            assigned: "ID"
+        },
+        {
+            colname: total_funding_usd
+            included: false
+            assigned: null
+        }
+    ]
+    */
 
     // useEffect(() => {
     //     console.log(includedCols, assignedCols)
@@ -27,22 +43,45 @@ export default function App() {
     }
 
     let handleUpload = () => {
-        // post 
-        let formData = new FormData()
-        formData.append('file', file)
-        formData.append('included_cols', includedCols)
-        formData.append('assigned_cols', JSON.stringify(assignedCols))
-        fetch('/data', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
+        let wantedResults = [] // arr of objs
+        let filterCols = data => {
+            let obj = {}
+            Object.keys(data).forEach(col => { if (includedCols.includes(col)) obj[col] = data[col] })
+            return obj
+        }
+    
+        // parse
+        papa.parse(file, {
+            header: true,
+            step: (row, parser) => {
+                // filter the data and push it to wantedResults
+                
+                // post 
+                let formData = new FormData()
+                formData.append('stream', JSON.stringify(filterCols(row.data)))
+                fetch('/data_stream', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+            }
+        })
 
-        // reset state
-        setFile()
-        setCols()
-        setView('upload')
-        setIncludedCols()
-        setAssignedCols()
+        // post 
+        // let formData = new FormData()
+        // formData.append('file', file)
+        // formData.append('included_cols', includedCols)
+        // formData.append('assigned_cols', JSON.stringify(assignedCols))
+        // fetch('/data', {
+        //     method: 'POST',
+        //     body: formData
+        // }).then(response => response.json())
+
+        // // reset state
+        // setFile()
+        // setCols()
+        // setView('upload')
+        // setIncludedCols()
+        // setAssignedCols()
     }
 
     return (

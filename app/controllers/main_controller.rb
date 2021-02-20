@@ -42,4 +42,14 @@ class MainController < ApplicationController
     @data.file = file
     @data.save
   end
+
+  def new_data_stream
+    @data = Data.new
+    @data.included_data = [] # arr of objs
+    @data.assigned_data = [] # arr of objs
+
+    render :json => {
+      stream: params['stream']
+    }
+  end
 end
