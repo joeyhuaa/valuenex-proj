@@ -43,45 +43,56 @@ export default function App() {
     }
 
     let handleUpload = () => {
-        let wantedResults = [] // arr of objs
-        let filterCols = data => {
+
+        let filterIncludedCols = data => {
             let obj = {}
             Object.keys(data).forEach(col => { if (includedCols.includes(col)) obj[col] = data[col] })
             return obj
         }
-    
-        // parse
+
+        let filterAssignedCols = data => {
+            let obj = {}
+            let pairs = Object.entries(assignedCols).flat()
+            Object.keys(data).forEach(col => { 
+                if (pairs.includes(col)) {
+                    let i = pairs.findIndex(x => x === col) // find the index of col in pairs
+                    let assigned_key = pairs[i-1] // the previous element will be the assigned key
+                    obj[assigned_key] = data[col] 
+                }
+            })
+            return obj
+        }
+
+        // parse, filter, store in includedData and assignedData
+        let includedData = [], assignedData = [] // arr of objs
         papa.parse(file, {
             header: true,
             step: (row, parser) => {
                 // filter the data and push it to wantedResults
-                
-                // post 
-                let formData = new FormData()
-                formData.append('stream', JSON.stringify(filterCols(row.data)))
-                fetch('/data_stream', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.json())
-            }
+                includedData.push( filterIncludedCols(row.data) )
+                assignedData.push( filterAssignedCols(row.data) )
+            },
+            complete: () => post(includedData, assignedData)
         })
 
         // post 
-        // let formData = new FormData()
-        // formData.append('file', file)
-        // formData.append('included_cols', includedCols)
-        // formData.append('assigned_cols', JSON.stringify(assignedCols))
-        // fetch('/data', {
-        //     method: 'POST',
-        //     body: formData
-        // }).then(response => response.json())
+        let post = (includedData, assignedData) => {
+            let formData = new FormData()
+            formData.append('file', file)
+            formData.append('included_data', JSON.stringify(includedData))
+            formData.append('assigned_data', JSON.stringify(assignedData))
+            fetch('/data', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+        }
 
-        // // reset state
-        // setFile()
-        // setCols()
-        // setView('upload')
-        // setIncludedCols()
-        // setAssignedCols()
+        // reset state
+        setFile()
+        setCols()
+        setView('upload')
+        setIncludedCols()
+        setAssignedCols()
     }
 
     return (
