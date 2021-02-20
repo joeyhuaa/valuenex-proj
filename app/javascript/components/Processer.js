@@ -21,11 +21,8 @@ export default function Processer({
         let checkedColsCopy =  [...checkedCols]
         if (checkedCols.includes(colname)) {
             let i = checkedCols.indexOf(colname)
-            // checkedColsCopy.splice(i, 1, null)
             checkedColsCopy.splice(i, 1)
         } else {
-            // let i = checkedCols.indexOf(null)
-            // checkedColsCopy.splice(i, 1, colname)
             checkedColsCopy.push(colname)
         }
         setCheckedCols(checkedColsCopy)
@@ -36,8 +33,13 @@ export default function Processer({
         let assignedColsCopy = {...assignedCols}
         let availableColsCopy = [...availableCols]
 
-        assignedColsCopy[label] = colname
-        availableColsCopy.splice(availableColsCopy.indexOf(colname), 1)
+        if (assignedColsCopy[label]) {
+            availableColsCopy.splice(availableColsCopy.indexOf(colname), 1, assignedColsCopy[label])
+            assignedColsCopy[label] = colname
+        } else {
+            assignedColsCopy[label] = colname
+            availableColsCopy.splice(availableColsCopy.indexOf(colname), 1)
+        }
 
         setAssignedCols(assignedColsCopy)
         setAvailableCols(availableColsCopy)
