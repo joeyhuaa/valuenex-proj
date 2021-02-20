@@ -10,6 +10,7 @@ export default function App() {
     let [view, setView] = useState('upload')
     let [includedCols, setIncludedCols] = useState()
     let [assignedCols, setAssignedCols] = useState()
+    let [canUpload, setCanUpload] = useState(false)
 
     // useEffect(() => {
     //     console.log(includedCols, assignedCols)
@@ -64,8 +65,10 @@ export default function App() {
             }
             {view === 'validation' &&
                 <Validation
+                    file={file}
                     includedCols={includedCols}
                     assignedCols={assignedCols} 
+                    setCanUpload={setCanUpload}
                 />
             }
             <div style={{display:'flex'}}>
@@ -80,9 +83,16 @@ export default function App() {
                     </button>
                 }
                 {view == 'validation' &&
-                    <button onClick={handleUpload}>
-                        Upload
-                    </button>
+                    <div>
+                        <button onClick={handleUpload} disabled={!canUpload}>
+                            Upload
+                        </button>
+                        {!canUpload && 
+                            <span style={{fontSize:'10px', color:'red', marginLeft:'10px'}}>
+                                Please pick another column for Timestamp. The current one is invalid.
+                            </span>
+                        }
+                    </div>
                 }
             </div>
         </div>

@@ -1,5 +1,4 @@
-import React, {useRef} from 'react'
-const papa = require('papaparse')
+import React from 'react'
 
 export default function Upload({
     retrieveFile,
