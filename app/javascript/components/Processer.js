@@ -24,10 +24,12 @@ export default function Processer({
         let checkedColsCopy =  [...checkedCols]
         if (checkedCols.includes(colname)) {
             let i = checkedCols.indexOf(colname)
-            checkedColsCopy.splice(i, 1, null)
+            // checkedColsCopy.splice(i, 1, null)
+            checkedColsCopy.splice(i, 1)
         } else {
-            let i = checkedCols.indexOf(null)
-            checkedColsCopy.splice(i, 1, colname)
+            // let i = checkedCols.indexOf(null)
+            // checkedColsCopy.splice(i, 1, colname)
+            checkedColsCopy.push(colname)
         }
         setCheckedCols(checkedColsCopy)
         setAvailableCols(checkedColsCopy)

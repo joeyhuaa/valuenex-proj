@@ -11,9 +11,9 @@ export default function App() {
     let [includedCols, setIncludedCols] = useState()
     let [assignedCols, setAssignedCols] = useState()
 
-    useEffect(() => {
-        console.log(includedCols, assignedCols)
-    }, [includedCols, assignedCols])
+    // useEffect(() => {
+    //     console.log(includedCols, assignedCols)
+    // }, [includedCols, assignedCols])
 
     let handleBack = () => {
         if (view === 'processer') setView('upload')
@@ -75,7 +75,7 @@ export default function App() {
                     </button>
                 }
                 {view !== 'validation' &&
-                    <button onClick={handleNext}>
+                    <button onClick={handleNext} style={{float:'right'}} disabled={file ? false : true}>
                         Next
                     </button>
                 }
