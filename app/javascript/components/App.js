@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Upload from './Upload'
 import Processer from './Processer'
 import Validation from './Validation'
@@ -12,25 +12,7 @@ export default function App() {
     let [includedCols, setIncludedCols] = useState()
     let [assignedCols, setAssignedCols] = useState()
     let [canUpload, setCanUpload] = useState(false)
-
-    /*
-    [
-        {
-            colname: id
-            included: true
-            assigned: "ID"
-        },
-        {
-            colname: total_funding_usd
-            included: false
-            assigned: null
-        }
-    ]
-    */
-
-    // useEffect(() => {
-    //     console.log(includedCols, assignedCols)
-    // }, [includedCols, assignedCols])
+    let [timeStampInvalid, setTimeStampInvalid] = useState(true)
 
     let handleBack = () => {
         if (view === 'processer') setView('upload')
@@ -100,49 +82,59 @@ export default function App() {
             <Progress 
                 currView={view}
             />
-            {view === 'upload' &&
-                <Upload
-                    retrieveFile={setFile}
-                    retrieveCols={setCols}
-                />
-            }
-            {view === 'processer' &&
-                <Processer 
-                    cols={cols}
-                    retrieveIncludedCols={setIncludedCols}
-                    retrieveAssignedCols={setAssignedCols}
-                />
-            }
-            {view === 'validation' &&
-                <Validation
-                    file={file}
-                    includedCols={includedCols}
-                    assignedCols={assignedCols} 
-                    setCanUpload={setCanUpload}
-                />
-            }
-            <div style={{display:'flex'}}>
+            <div style={{height:'65%'}}>
+                {view === 'upload' &&
+                    <Upload
+                        retrieveFile={setFile}
+                        retrieveCols={setCols}
+                    />
+                }
+                {view === 'processer' &&
+                    <Processer 
+                        cols={cols}
+                        retrieveIncludedCols={setIncludedCols}
+                        retrieveAssignedCols={setAssignedCols}
+                    />
+                }
+                {view === 'validation' &&
+                    <Validation
+                        file={file}
+                        includedCols={includedCols}
+                        assignedCols={assignedCols} 
+                        setCanUpload={setCanUpload}
+                        setTimeStampInvalid={setTimeStampInvalid}
+                    />
+                }
+            </div>
+            
+            <div>
+                {!canUpload && view == 'validation' && Object.values(assignedCols).includes(null) &&
+                    <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:595}}>
+                        One or more column assignments is missing.
+                    </span>
+                }
+                {!canUpload && view == 'validation' && timeStampInvalid &&
+                    <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:605}}>
+                        Please assign another column to Timestamp. The current one is missing or invalid.
+                    </span>
+                }
+            </div>
+
+            <div id='footer'>
                 {view !== 'upload' && 
-                    <button onClick={handleBack}>
+                    <button className='footer-item' onClick={handleBack}>
                         Back
                     </button>
                 }
                 {view !== 'validation' &&
-                    <button onClick={handleNext} disabled={file ? false : true}>
+                    <button className='footer-item' onClick={handleNext} disabled={file ? false : true}>
                         Next
                     </button>
                 }
                 {view == 'validation' &&
-                    <div>
-                        <button onClick={handleUpload} disabled={!canUpload}>
-                            Upload
-                        </button>
-                        {!canUpload && 
-                            <span style={{fontSize:'10px', color:'red', marginLeft:'10px'}}>
-                                Please pick another column for Timestamp. The current one is invalid.
-                            </span>
-                        }
-                    </div>
+                    <button className='footer-item' onClick={handleUpload} disabled={!canUpload}>
+                        Upload
+                    </button>                        
                 }
             </div>
         </div>

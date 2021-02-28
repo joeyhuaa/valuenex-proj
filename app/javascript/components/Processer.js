@@ -69,7 +69,7 @@ export default function Processer({
                 {['ID', 'Name', 'Timestamp'].map(label => {
                     return (
                         <div key={label}>
-                            <h4>{label}</h4>
+                            <h4 style={{marginBottom:'5px', marginTop:'10px'}}>{label}</h4>
                             <Select 
                                 options={availableCols.map(col => {
                                     return {value: col, label: col}

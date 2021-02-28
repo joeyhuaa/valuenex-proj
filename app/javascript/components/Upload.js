@@ -1,4 +1,5 @@
 import React from 'react'
+import {HiOutlineUpload} from 'react-icons/hi'
 
 export default function Upload({
     retrieveFile,
@@ -26,15 +27,18 @@ export default function Upload({
     }
 
     return (
-        <div style={{height:'75%'}}>
+        <div>
             <h3>Upload your dataset and click next when you finish.</h3>
-            <div>
+            <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                <HiOutlineUpload size={200} />
+                <div style={{paddingLeft:'65px'}}>
                 <input 
                     id='upload'
                     type='file'
                     accept='.csv, .tsv, .txt, .xls, .xlsx'
                     onChange={handleFileLoad}
                 />
+                </div>
             </div>
         </div>
     )

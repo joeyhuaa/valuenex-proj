@@ -22,3 +22,28 @@ body {
     display: flex;
     justify-content: center;
 }
+
+button {
+    width: 100px;
+    height: 30px;
+    /* background-color: #008eff; */
+    border-radius: 5px;
+    /* color: whitesmoke; */
+    border-color: none;
+}
+
+button:disabled {
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: solid #dadada 2px;
+    height: 100px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+}
