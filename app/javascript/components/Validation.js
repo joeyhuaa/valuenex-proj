@@ -5,14 +5,13 @@ export default function Validation({
     file,
     includedCols,  
     assignedCols,
-    setCanUpload,
-    setTimeStampInvalid,
+    updateState
 }) {
     useEffect(() => {
         papa.parse(file, {
             complete: results => validate(results)
         })
-    })
+    }, [])
 
     let validate = results => {
         let timestamp = assignedCols.Timestamp
@@ -20,15 +19,13 @@ export default function Validation({
         let d_raw = results.data[1][ts_index]
         let d = new Date(d_raw)
         if (isNaN(d.getTime()) || !d_raw.includes('/')) {
-            setCanUpload(false)
-            setTimeStampInvalid(true)
+            updateState(false, true) // canUpload, timeStampInvalid
         }
         else {
             if (!Object.values(assignedCols).includes(null)) {
-                setCanUpload(true)
+                updateState(true, null)
             } else {
-                setCanUpload(false)
-                setTimeStampInvalid(false)
+                updateState(false, false)
             }
         }
     }

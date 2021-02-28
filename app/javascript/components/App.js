@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Upload from './Upload'
 import Processer from './Processer'
 import Validation from './Validation'
@@ -6,35 +6,38 @@ import Progress from './Progress'
 const papa = require('papaparse')
 
 export default function App() {
-    let [file, setFile] = useState()
-    let [cols, setCols] = useState()
-    let [view, setView] = useState('upload')
-    let [includedCols, setIncludedCols] = useState()
-    let [assignedCols, setAssignedCols] = useState()
-    let [canUpload, setCanUpload] = useState(false)
-    let [timeStampInvalid, setTimeStampInvalid] = useState(true)
+    let [state, setState] = useState({
+        file: null,
+        cols: [],
+        view: 'upload',
+        includedCols: [],
+        assignedCols: {'ID': null, 'Name': null, 'Timestamp': null},
+        assignableCols: [],
+        canUpload: false,
+        timeStampInvalid: true
+    })
 
     let handleBack = () => {
-        if (view === 'processer') setView('upload')
-        if (view === 'validation') setView('processer')
+        if (state.view === 'processer') setState({...state, view: 'upload'})
+        else if (state.view === 'validation') setState({...state, view: 'processer'})
     }
 
     let handleNext = () => {
-        if (view === 'upload') setView('processer')
-        if (view === 'processer') setView('validation')
+        if (state.view === 'upload') setState({...state, view: 'processer'})
+        else if (state.view === 'processer') setState({...state, view: 'validation'})
     }
 
     let handleUpload = () => {
 
         let filterIncludedCols = data => {
             let obj = {}
-            Object.keys(data).forEach(col => { if (includedCols.includes(col)) obj[col] = data[col] })
+            Object.keys(data).forEach(col => { if (state.includedCols.includes(col)) obj[col] = data[col] })
             return obj
         }
 
         let filterAssignedCols = data => {
             let obj = {}
-            let pairs = Object.entries(assignedCols).flat()
+            let pairs = Object.entries(state.assignedCols).flat()
             Object.keys(data).forEach(col => { 
                 if (pairs.includes(col)) {
                     let i = pairs.findIndex(x => x === col) // find the index of col in pairs
@@ -47,9 +50,9 @@ export default function App() {
 
         // parse, filter, store in includedData and assignedData
         let includedData = [], assignedData = [] // arr of objs
-        papa.parse(file, {
+        papa.parse(state.file, {
             header: true,
-            step: (row, parser) => {
+            step: (row) => {
                 // filter the data and push it to wantedResults
                 includedData.push( filterIncludedCols(row.data) )
                 assignedData.push( filterAssignedCols(row.data) )
@@ -60,7 +63,7 @@ export default function App() {
         // post 
         let post = (includedData, assignedData) => {
             let formData = new FormData()
-            formData.append('file', file)
+            formData.append('file', state.file)
             formData.append('included_data', JSON.stringify(includedData))
             formData.append('assigned_data', JSON.stringify(assignedData))
             fetch('/data', {
@@ -70,50 +73,61 @@ export default function App() {
         }
 
         // reset state
-        setFile()
-        setCols()
-        setView('upload')
-        setIncludedCols()
-        setAssignedCols()
+        setState({
+            file: null,
+            view: 'upload',
+            cols: [],
+            includedCols: [],
+            assignedCols: {'ID': null, 'Name': null, 'Timestamp': null},
+            assignableCols: [],
+            canUpload: false,
+            timeStampInvalid: true
+        })
     }
+
+    let uploadSetState = (file, cols) => setState({...state, file: file, cols: cols, includedCols: cols, assignableCols: cols})
+
+    let processSetState = (ic, ac, ac2) => setState({...state, includedCols: ic, assignedCols: ac, assignableCols: ac2})
+
+    let validateSetState = (cu, tsi) => setState({...state, canUpload: cu, timeStampInvalid: tsi ? tsi : state.timeStampInvalid})
 
     return (
         <div style={{width:'718px', height:'700px'}}>
             <Progress 
-                currView={view}
+                currView={state.view}
             />
             <div style={{height:'65%'}}>
-                {view === 'upload' &&
+                {state.view === 'upload' &&
                     <Upload
-                        retrieveFile={setFile}
-                        retrieveCols={setCols}
+                        updateState={uploadSetState}
                     />
                 }
-                {view === 'processer' &&
+                {state.view === 'processer' &&
                     <Processer 
-                        cols={cols}
-                        retrieveIncludedCols={setIncludedCols}
-                        retrieveAssignedCols={setAssignedCols}
+                        cols={state.cols}
+                        includedCols={state.includedCols}
+                        assignedCols={state.assignedCols}
+                        assignableCols={state.assignableCols}
+                        updateState={processSetState}
                     />
                 }
-                {view === 'validation' &&
+                {state.view === 'validation' &&
                     <Validation
-                        file={file}
-                        includedCols={includedCols}
-                        assignedCols={assignedCols} 
-                        setCanUpload={setCanUpload}
-                        setTimeStampInvalid={setTimeStampInvalid}
+                        file={state.file}
+                        includedCols={state.includedCols}
+                        assignedCols={state.assignedCols} 
+                        updateState={validateSetState}
                     />
                 }
             </div>
             
             <div>
-                {!canUpload && view == 'validation' && Object.values(assignedCols).includes(null) &&
+                {!state.canUpload && state.view == 'validation' && Object.values(state.assignedCols).includes(null) &&
                     <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:595}}>
                         One or more column assignments is missing.
                     </span>
                 }
-                {!canUpload && view == 'validation' && timeStampInvalid &&
+                {!state.canUpload && state.view == 'validation' && state.timeStampInvalid &&
                     <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:605}}>
                         Please assign another column to Timestamp. The current one is missing or invalid.
                     </span>
@@ -121,18 +135,18 @@ export default function App() {
             </div>
 
             <div id='footer'>
-                {view !== 'upload' && 
+                {state.view !== 'upload' && 
                     <button className='footer-item' onClick={handleBack}>
                         Back
                     </button>
                 }
-                {view !== 'validation' &&
-                    <button className='footer-item' onClick={handleNext} disabled={file ? false : true}>
+                {state.view !== 'validation' &&
+                    <button className='footer-item' onClick={handleNext} disabled={state.file ? false : true}>
                         Next
                     </button>
                 }
-                {view == 'validation' &&
-                    <button className='footer-item' onClick={handleUpload} disabled={!canUpload}>
+                {state.view === 'validation' &&
+                    <button className='footer-item' onClick={handleUpload} disabled={!state.canUpload}>
                         Upload
                     </button>                        
                 }

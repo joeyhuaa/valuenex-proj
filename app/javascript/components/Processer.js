@@ -3,46 +3,53 @@ import Select from 'react-select'
 
 export default function Processer({
     cols,
-    retrieveIncludedCols,
-    retrieveAssignedCols
+    includedCols,
+    assignedCols,
+    assignableCols,
+    updateState
 }) {
-    let [checkedCols, setCheckedCols] = useState(cols) 
-    let [availableCols, setAvailableCols] = useState(cols)
-    let [assignedCols, setAssignedCols] = useState({
-        'ID': null, 'Name': null, 'Timestamp': null 
-    })
-
-    useEffect(() => {
-        retrieveIncludedCols(checkedCols)
-        retrieveAssignedCols(assignedCols)
-    }, [assignedCols, checkedCols])
-
     let handleColCheck = colname => {
-        let checkedColsCopy =  [...checkedCols]
-        if (checkedCols.includes(colname)) {
-            let i = checkedCols.indexOf(colname)
-            checkedColsCopy.splice(i, 1)
+        let includedColsCopy =  [...includedCols]
+        let assignedColsCopy = {...assignedCols}
+        if (includedCols.includes(colname)) {
+            // remove from includedCols
+            let i = includedCols.indexOf(colname)
+            includedColsCopy.splice(i, 1)
+
+            // check if it's also in assignedCols, if so remove
+            Object.keys(assignedCols).forEach(key => {
+                if (assignedCols[key] === colname) assignedColsCopy[key] = null
+            })
         } else {
-            checkedColsCopy.push(colname)
+            includedColsCopy.push(colname)
         }
-        setCheckedCols(checkedColsCopy)
-        setAvailableCols(checkedColsCopy)
+
+        // assignable = included - assigned
+        let assignableColsCopy = includedColsCopy.filter(c => !Object.values(assignedCols).includes(c))
+        updateState(includedColsCopy, assignedColsCopy, assignableColsCopy)
     }
 
     let handleColSelect = (colname, label) => {
         let assignedColsCopy = {...assignedCols}
-        let availableColsCopy = [...availableCols]
+        let assignableColsCopy = [...assignableCols]
 
-        if (assignedColsCopy[label]) {
-            availableColsCopy.splice(availableColsCopy.indexOf(colname), 1, assignedColsCopy[label])
-            assignedColsCopy[label] = colname
+        // if we are clearing selection
+        if (colname === '') {
+            assignableColsCopy.push(assignedColsCopy[label])
+            assignedColsCopy[label] = null
+
+        // if making new selection
         } else {
-            assignedColsCopy[label] = colname
-            availableColsCopy.splice(availableColsCopy.indexOf(colname), 1)
+            if (assignedColsCopy[label]) {
+                assignableColsCopy.splice(assignableColsCopy.indexOf(colname), 1, assignedColsCopy[label])
+                assignedColsCopy[label] = colname
+            } else {
+                assignedColsCopy[label] = colname
+                assignableColsCopy.splice(assignableColsCopy.indexOf(colname), 1)
+            }
         }
 
-        setAssignedCols(assignedColsCopy)
-        setAvailableCols(availableColsCopy)
+        updateState(includedCols, assignedColsCopy, assignableColsCopy)
     }
 
     return (
@@ -55,7 +62,7 @@ export default function Processer({
                             <div key={col}>
                                 <input 
                                     type='checkbox'
-                                    checked={checkedCols.includes(col)}
+                                    checked={includedCols.includes(col)}
                                     onChange={() => handleColCheck(col)}
                                 />
                                 <label>{col}</label>
@@ -71,11 +78,13 @@ export default function Processer({
                         <div key={label}>
                             <h4 style={{marginBottom:'5px', marginTop:'10px'}}>{label}</h4>
                             <Select 
-                                options={availableCols.map(col => {
+                                options={assignableCols.map(col => {
                                     return {value: col, label: col}
                                 })}
-                                onChange={val => handleColSelect(val.value, label)}
+                                onChange={val => handleColSelect(val ? val.value : '', label)}
+                                value={{value: label, label: assignedCols[label] ? assignedCols[label] : "Select..."}}
                                 isSearchable
+                                isClearable
                             />
                         </div>
                     )

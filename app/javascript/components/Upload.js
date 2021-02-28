@@ -2,13 +2,11 @@ import React from 'react'
 import {HiOutlineUpload} from 'react-icons/hi'
 
 export default function Upload({
-    retrieveFile,
-    retrieveCols
+    updateState,
 }) {
     let handleFileLoad = () => {
         // store file in App state
         let file = document.getElementById('upload').files[0]
-        retrieveFile(file)
 
         // get array columns for processer
         let fr = new FileReader()
@@ -17,10 +15,10 @@ export default function Upload({
             let firstLine = text.split('\n')[0]
             if (file.type === 'text/csv') {
                 let cols = firstLine.split(',').map(c => c.trim())
-                retrieveCols(cols)
+                updateState(file, cols)
             } else if (file.type === 'text/tab-separated-values') {
                 let cols = firstLine.split('\t').map(c => c.trim())
-                retrieveCols(cols)
+                updateState(file, cols)
             }
         }
         fr.readAsText(file)
