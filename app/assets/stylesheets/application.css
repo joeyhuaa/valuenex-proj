@@ -20,7 +20,7 @@
 
 body {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 button {
@@ -46,4 +46,8 @@ button:disabled {
     height: 100px;
     margin-top: 5px;
     flex-wrap: wrap;
+}
+
+#uploads-sidebar > p {
+    font-size: 12px;
 }

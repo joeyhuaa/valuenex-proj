@@ -5,7 +5,7 @@ import Validation from './Validation'
 import Progress from './Progress'
 const papa = require('papaparse')
 
-export default function App() {
+export default function App({data}) {
     let [state, setState] = useState({
         file: null,
         cols: [],
@@ -16,6 +16,13 @@ export default function App() {
         canUpload: false,
         timeStampInvalid: true
     })
+
+    useEffect(() => {
+        setState({
+            ...state,
+            assignedCols: {'ID': null, 'Name': null, 'Timestamp': null}
+        })
+    }, [state.file])
 
     let handleBack = () => {
         if (state.view === 'processer') setState({...state, view: 'upload'})
@@ -42,7 +49,7 @@ export default function App() {
                 if (pairs.includes(col)) {
                     let i = pairs.findIndex(x => x === col) // find the index of col in pairs
                     let assigned_key = pairs[i-1] // the previous element will be the assigned key
-                    obj[assigned_key] = data[col] 
+                    obj[assigned_key] = [col, data[col]]
                 }
             })
             return obj
@@ -69,7 +76,7 @@ export default function App() {
             fetch('/data', {
                 method: 'POST',
                 body: formData
-            }).then(response => response.json())
+            }).then(() => window.location.reload())
         }
 
         // reset state
@@ -92,64 +99,98 @@ export default function App() {
     let validateSetState = (cu, tsi) => setState({...state, canUpload: cu, timeStampInvalid: tsi ? tsi : state.timeStampInvalid})
 
     return (
-        <div style={{width:'718px', height:'700px'}}>
-            <Progress 
-                currView={state.view}
-            />
-            <div style={{height:'65%'}}>
-                {state.view === 'upload' &&
-                    <Upload
-                        updateState={uploadSetState}
-                    />
-                }
-                {state.view === 'processer' &&
-                    <Processer 
-                        cols={state.cols}
-                        includedCols={state.includedCols}
-                        assignedCols={state.assignedCols}
-                        assignableCols={state.assignableCols}
-                        updateState={processSetState}
-                    />
-                }
-                {state.view === 'validation' &&
-                    <Validation
-                        file={state.file}
-                        includedCols={state.includedCols}
-                        assignedCols={state.assignedCols} 
-                        updateState={validateSetState}
-                    />
-                }
-            </div>
-            
-            <div>
-                {!state.canUpload && state.view == 'validation' && Object.values(state.assignedCols).includes(null) &&
-                    <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:595}}>
-                        One or more column assignments is missing.
-                    </span>
-                }
-                {!state.canUpload && state.view == 'validation' && state.timeStampInvalid &&
-                    <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:605}}>
-                        Please assign another column to Timestamp. The current one is missing or invalid.
-                    </span>
-                }
+        <div style={{display:'flex', width:'100%'}}>
+            <div style={{
+                borderRight:'solid #dadada 2px', 
+                width:'200px', 
+                whiteSpace:'pre-wrap',
+                overflowY:'scroll',
+                height:'700px',
+                paddingRight:'10px'
+            }}>
+                <h3>Your Uploads</h3>
+                {data.map(d => {
+                    let included_cols = Object.keys(d.included_data[0])
+                    let assigned_cols = Object.entries(d.assigned_data[0])
+                    return (
+                        <div 
+                            id='uploads-sidebar'
+                            style={{
+                                borderBottom:'solid #dadada 1px',
+                                paddingBottom:'10px',
+                                lineHeight:'5px'
+                            }}
+                        >
+                            <h5>Filename:</h5>
+                            <p>{d.filename}</p>
+                            <h5>Included Columns:</h5>
+                            {included_cols.map(i => <p>{i}</p>)}
+                            <h5>Assigned Columns:</h5>
+                            {assigned_cols.map(a => <p>{a[0]}: {a[1][0]}</p>)}
+                        </div>
+                    )
+                })}
             </div>
 
-            <div id='footer'>
-                {state.view !== 'upload' && 
-                    <button className='footer-item' onClick={handleBack}>
-                        Back
-                    </button>
-                }
-                {state.view !== 'validation' &&
-                    <button className='footer-item' onClick={handleNext} disabled={state.file ? false : true}>
-                        Next
-                    </button>
-                }
-                {state.view === 'validation' &&
-                    <button className='footer-item' onClick={handleUpload} disabled={!state.canUpload}>
-                        Upload
-                    </button>                        
-                }
+            <div style={{width:'718px', height:'700px', marginLeft:'70px'}}>
+                <Progress 
+                    currView={state.view}
+                />
+                <div style={{height:'65%'}}>
+                    {state.view === 'upload' &&
+                        <Upload
+                            updateState={uploadSetState}
+                        />
+                    }
+                    {state.view === 'processer' &&
+                        <Processer 
+                            cols={state.cols}
+                            includedCols={state.includedCols}
+                            assignedCols={state.assignedCols}
+                            assignableCols={state.assignableCols}
+                            updateState={processSetState}
+                        />
+                    }
+                    {state.view === 'validation' &&
+                        <Validation
+                            file={state.file}
+                            includedCols={state.includedCols}
+                            assignedCols={state.assignedCols} 
+                            updateState={validateSetState}
+                        />
+                    }
+                </div>
+                
+                <div>
+                    {!state.canUpload && state.view == 'validation' && Object.values(state.assignedCols).includes(null) &&
+                        <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:595}}>
+                            One or more column assignments is missing.
+                        </span>
+                    }
+                    {!state.canUpload && state.view == 'validation' && state.timeStampInvalid &&
+                        <span className='footer-item' style={{fontSize:'10px', color:'red', position:'absolute', zIndex:10, top:605}}>
+                            Please assign another column to Timestamp. The current one is missing or invalid.
+                        </span>
+                    }
+                </div>
+
+                <div id='footer'>
+                    {state.view !== 'upload' && 
+                        <button className='footer-item' onClick={handleBack}>
+                            Back
+                        </button>
+                    }
+                    {state.view !== 'validation' &&
+                        <button className='footer-item' onClick={handleNext} disabled={state.file ? false : true}>
+                            Next
+                        </button>
+                    }
+                    {state.view === 'validation' &&
+                        <button className='footer-item' onClick={handleUpload} disabled={!state.canUpload}>
+                            Upload
+                        </button>                        
+                    }
+                </div>
             </div>
         </div>
     )

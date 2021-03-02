@@ -7,8 +7,10 @@ import ReactDOM from 'react-dom'
 import App from '../components/App'
 
 document.addEventListener('DOMContentLoaded', () => {
+  let div = document.getElementById('data')
+  let data = JSON.parse(div.getAttribute('data'))
   ReactDOM.render(
-    <App />,
+    <App data={data} />,
     document.body.appendChild(document.createElement('div')),
   )
 })
