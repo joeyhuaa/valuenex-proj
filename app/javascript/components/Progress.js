@@ -40,7 +40,7 @@ export default function Progress({
                     justifyContent:'center',
                     alignItems:'center',
                     flexDirection:'column',
-                    paddingTop:'20px'
+                    // paddingTop:'20px'
                 }}>
                     <div style={currView === view ? circleCurrStyle : circleStyle} />
                     <p style={labelStyle}>{viewLabelMap[view]}</p>

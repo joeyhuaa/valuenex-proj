@@ -1,6 +1,17 @@
 import React from  'react'
 import Select from 'react-select'
 
+let selectStyles = {
+    menu: provided => ({
+        ...provided,
+        position:'absolute',
+    }),
+    container: provided => ({
+        ...provided,
+        width: 250
+    })
+}
+
 export default function Processer({
     cols,
     includedCols,
@@ -85,6 +96,7 @@ export default function Processer({
                                 value={{value: label, label: assignedCols[label] ? assignedCols[label] : "Select..."}}
                                 isSearchable
                                 isClearable
+                                styles={selectStyles}
                             />
                         </div>
                     )

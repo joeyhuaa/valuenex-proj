@@ -108,8 +108,9 @@ export default function App({data}) {
                 width:'200px', 
                 whiteSpace:'pre-wrap',
                 overflowY:'scroll',
-                height:'700px',
-                paddingRight:'10px'
+                height:'100vh',
+                paddingRight:'10px',
+                paddingTop:'20px'
             }}>
                 <h3>Your Uploads</h3>
                 {data.map(d => {
@@ -120,10 +121,12 @@ export default function App({data}) {
                             id='uploads-sidebar'
                             style={{
                                 borderBottom:'solid #dadada 1px',
+                                paddingTop:'15px',
                                 paddingBottom:'10px',
                                 lineHeight:'5px'
                             }}
                         >
+                            <span style={{color:'#008eff'}}>#{d.id}</span>
                             <h5>Filename:</h5>
                             <span>{d.filename}</span>
                             <h5>Included Columns:</h5>
@@ -142,6 +145,7 @@ export default function App({data}) {
                 <div style={{height:'65%'}}>
                     {state.view === 'upload' &&
                         <Upload
+                            file={state.file}
                             updateState={uploadSetState}
                         />
                     }

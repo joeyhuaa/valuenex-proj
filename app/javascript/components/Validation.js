@@ -33,12 +33,12 @@ export default function Validation({
     return (
         <div>
             <p>Included columns:</p>
-            {includedCols.map(col => <p key={col} style={{color:'#6d32a8', marginLeft:'35px'}}>{col}</p>)}
+            {includedCols.map(col => <p key={col} style={{fontWeight:'bold', marginLeft:'35px'}}>{col}</p>)}
             <p style={{marginTop:'30px'}}>ID, Name, and Timestamp assignment:</p>
             {Object.keys(assignedCols).map(key => {
                 return (
                     <p key={key} style={{marginLeft:'35px', width:'250px'}}>{key}: 
-                        <span style={{color:'#008eff', float:'right'}}>{assignedCols[key]}</span>
+                        <span style={{fontWeight:'bold', float:'right'}}>{assignedCols[key]}</span>
                     </p>
                 )
             })}
