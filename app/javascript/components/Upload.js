@@ -28,16 +28,33 @@ export default function Upload({
     return (
         <div>
             <p>Upload your dataset and click next when you finish.</p>
-            <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+            <div 
+                style={{
+                    display:'flex', 
+                    flexDirection:'column', 
+                    alignItems:'center', 
+                    backgroundColor:'#e1e8f2',
+                    width:'500px',
+                    height:'300px',
+                    margin:'50px auto auto auto'
+                }}
+            >
                 <HiOutlineUpload size={200} color={'#008eff'} />
-                <div style={{paddingLeft:'65px', display:'flex', justifyContent:'center', alignItems:'center'}}>
+                <div 
+                    style={{
+                        paddingLeft:'55px', 
+                        display:'flex', 
+                        justifyContent:'center', 
+                        alignItems:'center',
+                    }}
+                >
                     <input 
                         id='upload'
                         type='file'
                         accept='.csv, .tsv, .txt, .xls, .xlsx'
                         onChange={handleFileLoad}
-                        onDrop={e => console.log('dropped')}
                         style={{color:'transparent'}}
+                        onDrop={e => console.log('dropped')}
                     />
                     <label 
                         for='file'
@@ -46,6 +63,7 @@ export default function Upload({
                         {file ? file.name : 'No file chosen'}
                     </label>
                 </div>
+                <p style={{fontSize:'12px', color:'#9ea2a8'}}>Accepts .CSV, .TSV, .TXT, .XLS, .XLSX</p>
             </div>
         </div>
     )
