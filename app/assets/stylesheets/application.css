@@ -25,17 +25,28 @@ body {
 
 button {
     width: 100px;
-    height: 30px;
-    /* background-color: #008eff; */
-    border-radius: 5px;
-    /* color: whitesmoke; */
-    border-color: none;
+    height: 35px;
+    border: none;
+    outline: none;
+    opacity: 0.85;
 }
 
-button:disabled {
-    width: 100px;
-    height: 30px;
-    border-radius: 5px;
+button:hover {
+    opacity: 1;
+}
+
+.next-btn, .upload-btn {
+    background-color: #008eff;
+    color: whitesmoke;
+}
+
+.back-btn {
+    background-color: #363c45;
+    color: whitesmoke;
+}
+
+.next-btn:disabled, .upload-btn:disabled {
+    opacity: 0.5;
 }
 
 #footer {
@@ -50,4 +61,10 @@ button:disabled {
 
 #uploads-sidebar > p {
     font-size: 12px;
+}
+
+#uploads-sidebar > span, #uploads-sidebar > p > span {
+    font-size: 12px;
+    color: #008eff;
+    display: block;
 }

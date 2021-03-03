@@ -17,7 +17,7 @@ export default function App({data}) {
         timeStampInvalid: true
     })
 
-    useEffect(() => {
+    useEffect(() => {   
         setState({
             ...state,
             assignedCols: {'ID': null, 'Name': null, 'Timestamp': null}
@@ -76,7 +76,10 @@ export default function App({data}) {
             fetch('/data', {
                 method: 'POST',
                 body: formData
-            }).then(() => window.location.reload())
+            }).then(() => {
+                alert('Upload Success!')
+                window.location.reload()
+            })
         }
 
         // reset state
@@ -122,11 +125,11 @@ export default function App({data}) {
                             }}
                         >
                             <h5>Filename:</h5>
-                            <p>{d.filename}</p>
+                            <span>{d.filename}</span>
                             <h5>Included Columns:</h5>
-                            {included_cols.map(i => <p>{i}</p>)}
+                            {included_cols.map(i => <span style={{marginTop:'12px'}}>{i}</span>)}
                             <h5>Assigned Columns:</h5>
-                            {assigned_cols.map(a => <p>{a[0]}: {a[1][0]}</p>)}
+                            {assigned_cols.map(a => <p style={{width:'170px'}}>{a[0]}: <span style={{float:'right'}}>{a[1][0]}</span></p>)}
                         </div>
                     )
                 })}
@@ -174,19 +177,24 @@ export default function App({data}) {
                     }
                 </div>
 
-                <div id='footer'>
+                <div id='footer' style={state.view === 'upload' ? {justifyContent:'flex-end'} : null}>
+                    {state.view === 'upload' &&
+                        <button className='next-btn' onClick={handleNext} disabled={state.file ? false : true} style={{float:'right'}}>
+                            Next
+                        </button>
+                    }
                     {state.view !== 'upload' && 
-                        <button className='footer-item' onClick={handleBack}>
+                        <button className='back-btn' onClick={handleBack}>
                             Back
                         </button>
                     }
-                    {state.view !== 'validation' &&
-                        <button className='footer-item' onClick={handleNext} disabled={state.file ? false : true}>
+                    {state.view !== 'validation' && state.view !== 'upload' &&
+                        <button className='next-btn' onClick={handleNext} disabled={state.file ? false : true}>
                             Next
                         </button>
                     }
                     {state.view === 'validation' &&
-                        <button className='footer-item' onClick={handleUpload} disabled={!state.canUpload}>
+                        <button className='upload-btn' onClick={handleUpload} disabled={!state.canUpload}>
                             Upload
                         </button>                        
                     }

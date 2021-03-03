@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from  'react'
+import React from  'react'
 import Select from 'react-select'
 
 export default function Processer({
@@ -55,7 +55,7 @@ export default function Processer({
     return (
         <div>
             <div>
-                <h3>Exclude columns by untoggling the checkbox.</h3>
+                <p>Exclude columns by untoggling the checkbox.</p>
                 <div style={{display:'flex', flexDirection:'column'}}>
                     {cols.map(col => {
                         return (
@@ -71,8 +71,8 @@ export default function Processer({
                     })}
                 </div>
             </div>
-            <div>
-                <h3>Choose included columns to uniquely assign to ID, Name, Timestamp.</h3>
+            <div style={{marginTop:'30px'}}>
+                <p>Choose included columns to uniquely assign to <b>ID</b>, <b>Name</b>, <b>Timestamp</b>.</p>
                 {['ID', 'Name', 'Timestamp'].map(label => {
                     return (
                         <div key={label}>

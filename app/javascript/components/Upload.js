@@ -26,9 +26,9 @@ export default function Upload({
 
     return (
         <div>
-            <h3>Upload your dataset and click next when you finish.</h3>
+            <p>Upload your dataset and click next when you finish.</p>
             <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-                <HiOutlineUpload size={200} />
+                <HiOutlineUpload size={200} color={'#008eff'} />
                 <div style={{paddingLeft:'65px'}}>
                 <input 
                     id='upload'

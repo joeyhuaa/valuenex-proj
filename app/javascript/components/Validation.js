@@ -18,7 +18,7 @@ export default function Validation({
         let ts_index = results.data[0].indexOf(timestamp)
         let d_raw = results.data[1][ts_index]
         let d = new Date(d_raw)
-        if (isNaN(d.getTime()) || !d_raw.includes('/')) {
+        if (isNaN(d.getTime()) || !d_raw.includes('/')) { 
             updateState(false, true) // canUpload, timeStampInvalid
         }
         else {
@@ -32,12 +32,14 @@ export default function Validation({
 
     return (
         <div>
-            <h3>Included columns:</h3>
-            {includedCols.map(col => <p key={col} style={{color: '#6d32a8'}}>{col}</p>)}
-            <h3>ID, Name, and Timestamp assignment:</h3>
+            <p>Included columns:</p>
+            {includedCols.map(col => <p key={col} style={{color:'#6d32a8', marginLeft:'35px'}}>{col}</p>)}
+            <p style={{marginTop:'30px'}}>ID, Name, and Timestamp assignment:</p>
             {Object.keys(assignedCols).map(key => {
                 return (
-                    <p key={key}>{key}: <span style={{color: '#008eff'}}>{assignedCols[key]}</span></p>
+                    <p key={key} style={{marginLeft:'35px', width:'250px'}}>{key}: 
+                        <span style={{color:'#008eff', float:'right'}}>{assignedCols[key]}</span>
+                    </p>
                 )
             })}
         </div>

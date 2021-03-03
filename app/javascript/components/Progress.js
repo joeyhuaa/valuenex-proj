@@ -17,12 +17,12 @@ let labelStyle = {
 }
 
 export default function Progress({
-    currView, // string
+    currView, 
 }) {
     let viewLabelMap = {
-        'upload': 'Upload dataset',
-        'processer': 'Adjust settings',
-        'validation': 'Confirm details'
+        'upload': 'Upload Dataset',
+        'processer': 'Adjust Settings',
+        'validation': 'Confirm Details'
     }
 
     return (
@@ -33,7 +33,7 @@ export default function Progress({
             height: '100px',
             borderBottom: 'solid #dadada 2px'
         }}>
-            <h1>Upload dataset</h1>
+            <h1 style={{width:'300px'}}>{viewLabelMap[currView]}</h1>
             {Object.keys(viewLabelMap).map(view =>
                 <div key={view} style={{
                     display:'flex',
