@@ -60,7 +60,7 @@ export default function App({data}) {
         papa.parse(state.file, {
             header: true,
             step: (row) => {
-                // filter the data and push it to wantedResults
+                // filter the data and push 
                 includedData.push( filterIncludedCols(row.data) )
                 assignedData.push( filterAssignedCols(row.data) )
             },
