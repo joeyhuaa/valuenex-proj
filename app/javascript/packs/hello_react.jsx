@@ -5,12 +5,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '../components/App'
+import 'react-hot-loader'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
 
 document.addEventListener('DOMContentLoaded', () => {
-  let div = document.getElementById('data')
-  let data = JSON.parse(div.getAttribute('data'))
   ReactDOM.render(
-    <App data={data} />,
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>,
     document.body.appendChild(document.createElement('div')),
   )
 })
+
+if (module.hot) {
+  module.hot.accept('../components/App.js', () => {
+    render(require('../components/App.js').default);
+  });
+}
