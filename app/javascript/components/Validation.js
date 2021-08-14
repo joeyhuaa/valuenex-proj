@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react'
 const papa = require('papaparse')
+import { Text } from '@types/joeys-components'
 
 export default function Validation({
 	file,
-	includedCols,
-	assignedCols,
+	includedCols = [],
+	assignedCols = {},
 	updateState
 }) {
 	useEffect(() => {
-		papa.parse(file, {
-			complete: results => validate(results)
-		})
+		if (file) {
+			papa.parse(file, {
+				complete: results => validate(results)
+			})
+		}
 	}, [])
 
 	let validate = results => {
@@ -18,11 +21,11 @@ export default function Validation({
 		let ts_index = results.data[0].indexOf(timestamp)
 		let d_raw = results.data[1][ts_index]
 		let d = new Date(d_raw)
-		if (isNaN(d.getTime()) || !d_raw.includes('/')) {
+		if (isNaN(d.getTime()) || !d_raw?.includes('/')) {
 			updateState(false, true) // canUpload, timeStampInvalid
 		}
 		else {
-			if (!Object.values(assignedCols).includes(null)) {
+			if (!Object.values(assignedCols)?.includes(null)) {
 				updateState(true, null)
 			} else {
 				updateState(false, false)
@@ -30,16 +33,30 @@ export default function Validation({
 		}
 	}
 
+	if (!file) {
+    return (
+      <Text>No file chosen</Text>
+    )
+  }
+
 	return (
 		<div>
-			<p>Included columns:</p>
-			{includedCols.map(col => <p key={col} style={{ fontWeight: 'bold', marginLeft: '35px' }}>{col}</p>)}
-			<p style={{ marginTop: '30px' }}>ID, Name, and Timestamp assignment:</p>
+			<Text>Included columns:</Text>
+			{includedCols.map(col => (
+				<Text className='mt-8' key={col} style={{ fontWeight: 'bold', marginLeft: '35px' }}>
+					{col}
+				</Text>
+			))}
+
+			<Text className='mt-24'>ID, Name, and Timestamp assignment:</Text>
 			{Object.keys(assignedCols).map(key => {
 				return (
-					<p key={key} style={{ marginLeft: '35px', width: '250px' }}>{key}:
-						<span style={{ fontWeight: 'bold', float: 'right' }}>{assignedCols[key]}</span>
-					</p>
+					<Text className='mt-8' key={key} style={{ marginLeft: '35px', width: '250px' }}>
+						{key}:
+						<Text style={{ fontWeight: 'bold', float: 'right' }}>
+							{assignedCols[key]}
+						</Text>
+					</Text>
 				)
 			})}
 		</div>

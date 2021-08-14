@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+import { Text } from '@types/joeys-components'
 
 let selectStyles = {
   menu: provided => ({
@@ -9,16 +10,22 @@ let selectStyles = {
   container: provided => ({
     ...provided,
     width: 250
+  }),
+  option: provided => ({
+    ...provided,
+    color: 'black'
   })
 }
 
-export default function Processer({
-  cols,
-  includedCols,
-  assignedCols,
-  assignableCols,
-  updateState
-}) {
+export default function Processer(props) {
+  const {
+    cols,
+    includedCols,
+    assignedCols,
+    assignableCols,
+    updateState
+  } = props
+  
   let handleColCheck = colname => {
     let includedColsCopy = [...includedCols]
     let assignedColsCopy = { ...assignedCols }
@@ -63,14 +70,20 @@ export default function Processer({
     updateState(includedCols, assignedColsCopy, assignableColsCopy)
   }
 
+  if (cols.length === 0) {
+    return (
+      <Text>No file chosen</Text>
+    )
+  }
+
   return (
     <div>
       <div>
         <p>Exclude columns by untoggling the checkbox.</p>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className='df fdc'>
           {cols.map(col => {
             return (
-              <div key={col}>
+              <div className='mt-4' key={col}>
                 <input
                   type='checkbox'
                   checked={includedCols.includes(col)}
@@ -87,11 +100,9 @@ export default function Processer({
         {['ID', 'Name', 'Timestamp'].map(label => {
           return (
             <div key={label}>
-              <h4 style={{ marginBottom: '5px', marginTop: '10px' }}>{label}</h4>
+              <Text className='mt-16 mb-4' style={{ fontWeight: 'bold' }}>{label}</Text>
               <Select
-                options={assignableCols.map(col => {
-                  return { value: col, label: col }
-                })}
+                options={assignableCols.map(col => ({ value: col, label: col }) )}
                 onChange={val => handleColSelect(val ? val.value : '', label)}
                 value={{ value: label, label: assignedCols[label] ? assignedCols[label] : "Select..." }}
                 isSearchable

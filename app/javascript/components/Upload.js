@@ -1,5 +1,6 @@
 import React from 'react'
 import { HiOutlineUpload } from 'react-icons/hi'
+import { Text } from '@types/joeys-components'
 
 export default function Upload({
   file,
@@ -27,19 +28,20 @@ export default function Upload({
 
   return (
     <div>
-      <p>Upload your dataset and click next when you finish.</p>
+      <Text>Upload your dataset and click next when you finish.</Text>
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#e1e8f2',
+          border: 'solid 1px #9ea2a8',
+          borderRadius: '3px',
           width: '500px',
           height: '300px',
           margin: '50px auto auto auto'
         }}
       >
-        <HiOutlineUpload size={200} color={'#008eff'} />
+        <HiOutlineUpload size={200} color='#008eff' />
         <div
           style={{
             paddingLeft: '55px',
@@ -63,7 +65,7 @@ export default function Upload({
             {file ? file.name : 'No file chosen'}
           </label>
         </div>
-        <p style={{ fontSize: '12px', color: '#9ea2a8' }}>Accepts .CSV, .TSV, .TXT, .XLS, .XLSX</p>
+        <p className='mt-4' style={{ fontSize: '12px', color: '#9ea2a8' }}>Accepts .CSV, .TSV, .TXT, .XLS, .XLSX</p>
       </div>
     </div>
   )

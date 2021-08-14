@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
+import { Route, Link } from 'react-router-dom'
 
-import { useUploads, useCreateData } from '../hooks'
+import { useCreateData } from '../hooks'
 
 import Sidebar from './Sidebar'
 import Upload from './Upload'
 import Processer from './Processer'
 import Validation from './Validation'
 import Progress from './Progress'
+import Footer from './Footer'
 const papa = require('papaparse')
 
 function App() {
-	let { data, isLoading } = useUploads()
 	let _useCreateData = useCreateData()
 
 	let [state, setState] = useState({
@@ -31,16 +32,6 @@ function App() {
 			assignedCols: { 'ID': null, 'Name': null, 'Timestamp': null }
 		})
 	}, [state.file])
-
-	let handleBack = () => {
-		if (state.view === 'processer') setState({ ...state, view: 'upload' })
-		else if (state.view === 'validation') setState({ ...state, view: 'processer' })
-	}
-
-	let handleNext = () => {
-		if (state.view === 'upload') setState({ ...state, view: 'processer' })
-		else if (state.view === 'processer') setState({ ...state, view: 'validation' })
-	}
 
 	let handleUpload = () => {
 
@@ -77,17 +68,6 @@ function App() {
 
 		// post 
 		let post = (includedData, assignedData) => {
-			// let formData = new FormData()
-			// formData.append('file', state.file)
-			// formData.append('included_data', JSON.stringify(includedData))
-			// formData.append('assigned_data', JSON.stringify(assignedData))
-			// fetch('/data', {
-			// 	method: 'POST',
-			// 	body: formData
-			// }).then(() => {
-			// 	alert('Upload Success!')
-			// 	window.location.reload()
-			// })
 			console.log(state.file)
 			_useCreateData.mutate({
 				filename: state.file.name,
@@ -117,72 +97,121 @@ function App() {
 
 	return (
 		<div style={{ display: 'flex', width: '100%' }}>
-			<Sidebar data={data?.uploads} />
+			<Sidebar />
 
 			<div style={{ width: '718px', height: '700px', marginLeft: '70px' }}>
 				<Progress currView={state.view} />
 
-				<div style={{ height: '65%' }}>
-					{state.view === 'upload' && 
-						<Upload
-							file={state.file}
-							updateState={uploadSetState}
-						/>
-					}
-					{state.view === 'processer' &&
-						<Processer
-							cols={state.cols}
-							includedCols={state.includedCols}
-							assignedCols={state.assignedCols}
-							assignableCols={state.assignableCols}
-							updateState={processSetState}
-						/>
-					}
-					{state.view === 'validation' &&
-						<Validation
-							file={state.file}
-							includedCols={state.includedCols}
-							assignedCols={state.assignedCols}
-							updateState={validateSetState}
-						/>
-					}
+				<div className='mt-24' style={{ height: '67%' }}>
+					<Route 
+						path='/upload'
+						component={() => 
+							<Upload
+								file={state.file}
+								updateState={uploadSetState}
+							/>
+						}
+					/>
+					<Route 
+						path='/processer'
+						component={() =>
+							<Processer
+								cols={state.cols}
+								includedCols={state.includedCols}
+								assignedCols={state.assignedCols}
+								assignableCols={state.assignableCols}
+								updateState={processSetState}
+							/>
+						}
+					/>
+					<Route 
+						path='/validation'
+						component={() =>
+							<Validation
+								file={state.file}
+								includedCols={state.includedCols}
+								assignedCols={state.assignedCols}
+								updateState={validateSetState}
+							/>
+						}
+					/>
 				</div>
 
 				<div>
 					{!state.canUpload && state.view == 'validation' && Object.values(state.assignedCols).includes(null) &&
-						<span className='footer-item' style={{ fontSize: '10px', color: 'red', position: 'absolute', zIndex: 10, top: 595 }}>
+						<span 
+							className='footer-item' 
+							style={{ fontSize: '12px', color: 'red', position: 'absolute', bottom: 120 }}
+						>
 							One or more column assignments is missing.
 						</span>
 					}
 					{!state.canUpload && state.view == 'validation' && state.timeStampInvalid &&
-						<span className='footer-item' style={{ fontSize: '10px', color: 'red', position: 'absolute', zIndex: 10, top: 605 }}>
+						<span 
+							className='footer-item' 
+							style={{ fontSize: '12px', color: 'red', position: 'absolute', bottom: 140}}
+						>
 							Please assign another column to Timestamp. The current one is missing or invalid.
 						</span>
 					}
 				</div>
 
-				<div id='footer' style={state.view === 'upload' ? { justifyContent: 'flex-end' } : null}>
+				<Footer style={state.view === 'upload' ? { justifyContent: 'flex-end' } : null}>
 					{state.view === 'upload' &&
-						<button className='next-btn' onClick={handleNext} disabled={state.file ? false : true} style={{ float: 'right' }}>
-							Next
-						</button>
+						<Link to='processer'>
+							<button 
+								className='next-btn' 
+								onClick={() => setState({...state, view: 'processer'})} 
+								disabled={state.file ? false : true} 
+								style={{ float: 'right' }}
+							>
+								Next
+							</button>
+						</Link>
 					}
-					{state.view !== 'upload' &&
-						<button className='back-btn' onClick={handleBack}>
-							Back
-						</button>
-					}
-					{state.view !== 'validation' && state.view !== 'upload' &&
-						<button className='next-btn' onClick={handleNext} disabled={state.file ? false : true}>
-							Next
-						</button>
+					{state.view === 'processer' &&
+						<>
+							<Link to='upload'>
+								<button 
+									className='back-btn' 
+									onClick={() => setState({...state, view: 'upload'})}
+								>
+									Back
+								</button>
+							</Link>
+							<Link to='validation'>
+								<button 
+									className='next-btn' 
+									onClick={() => setState({...state, view: 'validation'})} 
+									style={{ float: 'right' }}
+								>
+									Next
+								</button>
+							</Link>
+						</>
 					}
 					{state.view === 'validation' &&
-						<button className='upload-btn' onClick={handleUpload} disabled={!state.canUpload}>
-							Upload
-						</button>
+						<>
+							<Link to='processer'>
+								<button 
+									className='back-btn' 
+									onClick={() => setState({...state, view: 'processer'})}>
+									Back
+								</button>
+							</Link>
+							<Link to='upload'>
+								<button 
+									className='next-btn' 
+									onClick={handleUpload} 
+									disabled={!state.canUpload} 
+									style={{ float: 'right' }}
+								>
+									Upload
+								</button>
+							</Link>
+						</>
 					}
-				</div>
+				</Footer>
 			</div>
 		</div>
 	)

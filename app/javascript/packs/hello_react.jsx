@@ -7,13 +7,16 @@ import ReactDOM from 'react-dom'
 import App from '../components/App'
 import 'react-hot-loader'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { BrowserRouter } from 'react-router-dom'
 
 const queryClient = new QueryClient()
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <QueryClientProvider client={queryClient}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </QueryClientProvider>,
     document.body.appendChild(document.createElement('div')),
   )

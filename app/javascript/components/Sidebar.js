@@ -1,40 +1,65 @@
 import React from 'react'
+import { Text } from '@types/joeys-components'
+import { useUploads } from '../hooks'
+import { RotateCircleLoading } from 'react-loadingg'
 
-export default function Sidebar({ data }) {
+export default function Sidebar() {
+  const { data, isLoading, isFetching } = useUploads();
+
   return (
-    <div style={{
-      borderRight: 'solid #dadada 2px',
-      width: '200px',
-      minWidth: '200px',
-      whiteSpace: 'pre-wrap',
-      overflowY: 'scroll',
-      height: '100vh',
-      paddingRight: '10px',
-      paddingTop: '20px'
-    }}>
-      <h3>Your Uploads</h3>
-      {data?.map((d, i) => {
+    <div 
+      id='uploads-sidebar'
+      style={{
+        borderRight: 'solid #dadada 1px',
+        width: '250px',
+        minWidth: '250px',
+        whiteSpace: 'pre-wrap',
+        overflowY: 'scroll',
+        height: '100vh',
+        paddingTop: '20px'
+      }}
+    >
+      <div className='df mb-24 mt-12'>
+        <h3 className='ml-16'>Your Uploads</h3>
+        {(isLoading || isFetching) && (
+          <div style={{ 
+            position: 'relative', 
+            flex: 1,
+          }}>
+            <RotateCircleLoading size='small' color='#008eff' />
+          </div>
+        )}
+      </div>
+
+      {data?.uploads?.map((d, i) => {
         let included_cols = Object.keys(d?.included_data[0])
         let assigned_cols = Object.entries(d?.assigned_data[0])
         return (
-          <div
-            key={`data-${i}`}
-            id='uploads-sidebar'
-            style={{
-              borderBottom: 'solid #dadada 1px',
-              paddingTop: '15px',
-              paddingBottom: '10px',
-              lineHeight: '5px'
-            }}
-          >
-            <span style={{ color: '#008eff' }}>#{d.id}</span>
-            <h5>Filename:</h5>
-            <span>{d?.filename}</span>
-            <h5>Included Columns:</h5>
-            {included_cols?.map(i => <span style={{ marginTop: '12px' }}>{i}</span>)}
-            <h5>Assigned Columns:</h5>
-            {assigned_cols?.map(a => <p style={{ width: '170px' }}>{a[0]}: <span style={{ float: 'right' }}>{a[1][0]}</span></p>)}
-          </div>
+          <>
+            <div
+              key={`data-${i}`}
+              className='upload clickable'
+              style={{
+                padding: '15px',
+                lineHeight: '5px'
+              }}
+            >
+              <Text type='subtle' style={{ color: '#008eff' }}>#{d.id}</Text>
+
+              <Text type='subtle' className='mt-12'>Filename:</Text>
+              <Text>{d?.filename}</Text>
+
+              <Text type='subtle' className='mt-12'>Included Columns:</Text>
+              {included_cols?.map(i => <Text>{i}</Text>)}
+
+              <Text type='subtle' className='mt-12'>Assigned Columns:</Text>
+              {assigned_cols?.map(a => (
+                <Text style={{ width: '170px' }}>
+                  {a[0]}: <Text type='input' style={{ float: 'right' }}>{a[1][0]}</Text>
+                </Text>
+              ))}
+            </div>
+          </>
         )
       })}
     </div>

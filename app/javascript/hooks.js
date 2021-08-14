@@ -17,9 +17,8 @@ export function useCreateData() {
     useMutation(
       data => axios.post(`/data`, data),
       {
-        onSuccess: res => {
+        onSettled: () => {
           queryClient.invalidateQueries('uploads')
-          // queryClient.setQueryData(['project', { id: res.data.projId }], res.data)
         }
       }
     )
