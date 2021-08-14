@@ -1,26 +1,5 @@
 import React from 'react'
-import { AiOutlineCheck } from 'react-icons/ai'
-import { StatusTracker } from '@types/joeys-components' 
-
-let circleStyle = {
-  height: '12px',
-  width: '12px',
-  borderRadius: '50%',
-  border: 'solid gray 1px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
-}
-
-let circleCurrStyle = {
-  ...circleStyle,
-  border: 'solid #008eff 1px',
-  backgroundColor: '#008eff'
-}
-
-let labelStyle = {
-  fontSize: '10px'
-}
+import { StatusTracker, Text } from '@types/joeys-components' 
 
 export default function Progress({
   currView,
@@ -46,7 +25,7 @@ export default function Progress({
       height: '100px',
       borderBottom: 'solid #dadada 1px'
     }}>
-      <h1 style={{ width: '300px' }}>{viewLabelMap[currView]}</h1>
+      <Text type='jumbo' style={{ width: '300px' }}>{viewLabelMap[currView]}</Text>
       <StatusTracker 
         labelSize={12}
         steps={[
@@ -61,7 +40,7 @@ export default function Progress({
           {
             label: 'Confirm Details',
             state: views().includes('validation') ? 'completed' : 'incomplete'
-          }
+          },
         ]}
       />
     </div>

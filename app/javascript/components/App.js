@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, Redirect } from 'react-router-dom'
 
 import { useCreateData } from '../hooks'
 
@@ -32,6 +32,10 @@ function App() {
 			assignedCols: { 'ID': null, 'Name': null, 'Timestamp': null }
 		})
 	}, [state.file])
+
+	useEffect(() => {
+		console.log(state.view)
+	}, [state.view])
 
 	let handleUpload = () => {
 
@@ -103,6 +107,7 @@ function App() {
 				<Progress currView={state.view} />
 
 				<div className='mt-24' style={{ height: '67%' }}>
+					{!state.file && <Redirect to='/upload' />}
 					<Route 
 						path='/upload'
 						component={() => 
