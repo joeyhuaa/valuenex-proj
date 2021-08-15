@@ -33,10 +33,6 @@ function App() {
 		})
 	}, [state.file])
 
-	useEffect(() => {
-		console.log(state.view)
-	}, [state.view])
-
 	let handleUpload = () => {
 
 		let filterIncludedCols = data => {

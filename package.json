@@ -8,6 +8,7 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "5.2.1",
     "@types/git": "^0.0.18",
+    "@types/joeys-components": "git+ssh://git@github.com:joeyhuaa/joeys-components.git#main",
     "axios": "^0.21.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "prop-types": "^15.7.2",
@@ -21,8 +22,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^4.1.0",
-    "turbolinks": "^5.2.0",
-    "@types/joeys-components": "git+ssh://git@github.com:joeyhuaa/joeys-components.git#main"
+    "turbolinks": "^5.2.0"
   },
   "version": "0.1.0",
   "devDependencies": {

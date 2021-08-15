@@ -1110,7 +1110,7 @@
 
 "@types/joeys-components@git+ssh://git@github.com:joeyhuaa/joeys-components.git#main":
   version "1.0.0"
-  resolved "git+ssh://git@github.com:joeyhuaa/joeys-components.git#90e2db2f0eb174633c7fec12ef0ffb1fd172403c"
+  resolved "git+ssh://git@github.com:joeyhuaa/joeys-components.git#4528e3c46ad36bd047d1bc1686087723f836d95a"
   dependencies:
     "@tippyjs/react" "^4.2.5"
     node-sass "^6.0.1"

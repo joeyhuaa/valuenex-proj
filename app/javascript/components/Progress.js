@@ -17,6 +17,14 @@ export default function Progress({
     return []
   }
 
+  let state = view => {
+    if (view === currView) return 'active'
+    else if (views().includes(view)) return 'completed'
+    else return 'incomplete'
+  }
+
+  console.log(state('upload'))
+
   return (
     <div style={{
       display: 'flex',
@@ -25,21 +33,23 @@ export default function Progress({
       height: '100px',
       borderBottom: 'solid #dadada 1px'
     }}>
-      <Text type='jumbo' style={{ width: '300px' }}>{viewLabelMap[currView]}</Text>
+      <Text type='emphasis' style={{ width: '300px' }}>{viewLabelMap[currView]}</Text>
       <StatusTracker 
+        completeBackgroundColor='#008eff'
+        borderCompleteColor='#008eff'
         labelSize={12}
         steps={[
           {
             label: 'Upload Dataset',
-            state: views().includes('upload') ? 'completed' : 'incomplete'
+            state: state('upload')
           },
           {
             label: 'Adjust Settings',
-            state: views().includes('processer') ? 'completed' : 'incomplete'
+            state: state('processer')
           },
           {
             label: 'Confirm Details',
-            state: views().includes('validation') ? 'completed' : 'incomplete'
+            state: state('validation')
           },
         ]}
       />

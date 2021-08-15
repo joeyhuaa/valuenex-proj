@@ -1,10 +1,11 @@
 import React from 'react'
 import { Text } from '@types/joeys-components'
-import { useUploads } from '../hooks'
+import { useUploads, useDeleteData } from '../hooks'
 import { RotateCircleLoading } from 'react-loadingg'
 
 export default function Sidebar() {
   const { data, isLoading, isFetching } = useUploads();
+  const _useDeleteData = useDeleteData();
 
   return (
     <div 
@@ -20,7 +21,7 @@ export default function Sidebar() {
       }}
     >
       <div className='df mb-24 mt-12'>
-        <h3 className='ml-16'>Your Uploads</h3>
+        <Text type='emphasis' className='ml-16'>Your Uploads</Text>
         {(isLoading || isFetching) && (
           <div style={{ 
             position: 'relative', 
@@ -38,7 +39,7 @@ export default function Sidebar() {
           <>
             <div
               key={`data-${i}`}
-              className='upload clickable'
+              className='upload upload-clickable'
               style={{
                 padding: '15px',
                 lineHeight: '5px'

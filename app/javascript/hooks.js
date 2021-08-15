@@ -24,3 +24,18 @@ export function useCreateData() {
     )
   )
 }
+
+export function useDeleteData() {
+  const queryClient = useQueryClient()
+
+  return (
+    useMutation(
+      data => axios.delete(`/data/${data.id}`, data),
+      {
+        onSettled: () => {
+          queryClient.invalidateQueries('uploads')
+        }
+      }
+    )
+  )
+}
