@@ -55,6 +55,16 @@ export default function UploadBody({
 			return obj
 		}
 
+    // post 
+		let post = (includedData, assignedData) => {
+			console.log(state.file)
+			_useCreateData.mutate({
+				filename: state.file.name,
+				included_data: JSON.stringify(includedData),
+				assigned_data: JSON.stringify(assignedData)
+			})
+		}
+
 		// parse, filter, store in includedData and assignedData
 		let includedData = [], assignedData = [] // arr of objs
 		papa.parse(state.file, {
@@ -66,16 +76,6 @@ export default function UploadBody({
 			},
 			complete: () => post(includedData, assignedData)
 		})
-
-		// post 
-		let post = (includedData, assignedData) => {
-			console.log(state.file)
-			_useCreateData.mutate({
-				filename: state.file.name,
-				included_data: JSON.stringify(includedData),
-				assigned_data: JSON.stringify(assignedData)
-			})
-		}
 
 		// reset state
 		setState({
@@ -97,7 +97,7 @@ export default function UploadBody({
 	const validateSetState = (cu, tsi) => setState({ ...state, canUpload: cu, timeStampInvalid: tsi ? tsi : state.timeStampInvalid })
 
   return (
-    <div style={{ width: '718px', height: '700px', marginLeft: '70px' }}>
+    <div id='upload-body'>
       <ProgressTracker currView={state.view} />
 
       <div className='mt-24' style={{ height: '67%' }}>

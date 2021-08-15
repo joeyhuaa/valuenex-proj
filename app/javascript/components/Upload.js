@@ -60,7 +60,7 @@ export default function Upload({
           />
           <label
             for='file'
-            style={{ position: 'absolute', marginLeft: '60px', fontSize: '14px', textAlign: 'left' }}
+            style={{ position: 'absolute', marginLeft: '60px', fontSize: '14px', textAlign: 'left', minWidth: '100px' }}
           >
             {file ? file.name : 'No file chosen'}
           </label>

@@ -9,8 +9,6 @@ export default function Sidebar() {
   const { data, isLoading, isFetching } = useUploads();
   const _useDeleteData = useDeleteData();
 
-  console.log(data);
-
   return (
     <div 
       id='uploads-sidebar'
@@ -19,7 +17,7 @@ export default function Sidebar() {
         width: '250px',
         minWidth: '250px',
         whiteSpace: 'pre-wrap',
-        overflowY: 'scroll',
+        overflowY: 'auto',
         height: '100vh',
         paddingTop: '20px'
       }}
