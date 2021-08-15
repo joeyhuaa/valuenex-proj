@@ -11,10 +11,12 @@ export default function Validation({
 	let [parseResults, setParseResults] = useState(null)
 
 	useEffect(() => {
-		papa.parse(file, {
-			preview: 5,
-			complete: results => setParseResults(results)
-		})
+		if (file) {
+			papa.parse(file, {
+				preview: 5,
+				complete: results => setParseResults(results)
+			})
+		}
 	}, [])
 
 	useEffect(() => {

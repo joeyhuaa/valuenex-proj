@@ -19,6 +19,9 @@ export function useCreateData() {
       {
         onSettled: () => {
           queryClient.invalidateQueries('uploads')
+        },
+        onSuccess: () => {
+          alert('success!')
         }
       }
     )
@@ -30,12 +33,21 @@ export function useDeleteData() {
 
   return (
     useMutation(
-      data => axios.delete(`/data/${data.id}`, data),
+      data => axios.delete(`/data/${parseInt(data.id)}`, data),
       {
         onSettled: () => {
           queryClient.invalidateQueries('uploads')
         }
       }
+    )
+  )
+}
+
+export function useGetData(id) {
+  return (
+    useQuery(
+      ['getData', id],
+      async () => axios.get(`/data/${id}`)
     )
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { StatusTracker, Text } from '@types/joeys-components' 
 
-export default function Progress({
+export default function ProgressTracker({
   currView,
 }) {
   let viewLabelMap = {
@@ -22,8 +22,6 @@ export default function Progress({
     else if (views().includes(view)) return 'completed'
     else return 'incomplete'
   }
-
-  console.log(state('upload'))
 
   return (
     <div style={{

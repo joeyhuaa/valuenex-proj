@@ -1,6 +1,8 @@
 import React from 'react'
 import { Text } from '@types/joeys-components'
 import { useUploads, useDeleteData } from '../hooks'
+
+import { Link } from 'react-router-dom'
 import { RotateCircleLoading } from 'react-loadingg'
 
 export default function Sidebar() {
@@ -36,14 +38,10 @@ export default function Sidebar() {
         let included_cols = Object.keys(d?.included_data[0])
         let assigned_cols = Object.entries(d?.assigned_data[0])
         return (
-          <>
+          <Link to={`/data/${d.id}`} key={`data-${i}`}>
             <div
-              key={`data-${i}`}
               className='upload upload-clickable'
-              style={{
-                padding: '15px',
-                lineHeight: '5px'
-              }}
+              tabIndex='0'
             >
               <Text type='subtle' style={{ color: '#008eff' }}>#{d.id}</Text>
 
@@ -60,7 +58,7 @@ export default function Sidebar() {
                 </Text>
               ))}
             </div>
-          </>
+          </Link>
         )
       })}
     </div>

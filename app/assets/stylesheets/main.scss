@@ -71,6 +71,7 @@ button:disabled {
 .upload > p > span {
   font-size: 12px;
   display: block;
+  text-decoration: none;
 }
 
 .df {
@@ -83,13 +84,28 @@ button:disabled {
   -moz-transition: background-color 0.5s ease-out;
   -o-transition: background-color 0.5s ease-out;
   transition: background-color 0.5s ease-out;
-}
+  color: white;
+  padding: 15px;
+  line-height: 5px;
 
-.upload-clickable:hover {
-  background-color: #e1e8f2;
-  color: black;
+  &:hover, &:focus {
+    background-color: #e1e8f2;
+    color: black;  
+  }
 }
 
 hr {
   margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.center-center {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
