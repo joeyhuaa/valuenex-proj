@@ -9,6 +9,8 @@ export default function Sidebar() {
   const { data, isLoading, isFetching } = useUploads();
   const _useDeleteData = useDeleteData();
 
+  console.log(data);
+
   return (
     <div 
       id='uploads-sidebar'
@@ -35,8 +37,8 @@ export default function Sidebar() {
       </div>
 
       {data?.uploads?.map((d, i) => {
-        let included_cols = Object.keys(d?.included_data[0])
-        let assigned_cols = Object.entries(d?.assigned_data[0])
+        let included_cols = Object.keys(d?.included_data?.[0])
+        let assigned_cols = Object.entries(d?.assigned_data?.[0])
         return (
           <Link to={`/data/${d.id}`} key={`data-${i}`}>
             <div
