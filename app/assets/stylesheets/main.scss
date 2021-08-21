@@ -78,20 +78,20 @@ button:disabled {
   display: flex;
 }
 
-.upload-clickable {
-  cursor: pointer;
-  -webkit-transition: background-color 0.5s ease-out;
-  -moz-transition: background-color 0.5s ease-out;
-  -o-transition: background-color 0.5s ease-out;
-  transition: background-color 0.5s ease-out;
-  color: white;
-  padding: 15px;
-  line-height: 5px;
-
-  &:hover, &:focus {
+.upload {
+  &.hover > .upload-clickable,
+  &.focus > .upload-clickable {
     background-color: #e1e8f2;
     color: black;  
   }
+}
+
+.upload-clickable {
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.5s ease-out;
+  padding: 15px;
+  line-height: 5px;
 }
 
 hr {

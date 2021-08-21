@@ -1,14 +1,14 @@
 import React from 'react'
 import { HiOutlineUpload } from 'react-icons/hi'
-import { Text } from '@types/joeys-components'
+import { Text, FancyFileInput } from '@types/joeys-components'
 
 export default function Upload({
   file,
   updateState,
 }) {
-  let handleFileLoad = () => {
+  let handleFileLoad = (files) => {
     // store file in App state
-    let file = document.getElementById('upload').files[0]
+    let file = files[0]
 
     // get array columns for processer
     let fr = new FileReader()
@@ -41,30 +41,12 @@ export default function Upload({
           margin: '50px auto auto auto'
         }}
       >
-        <HiOutlineUpload size={200} color='#008eff' />
-        <div
-          style={{
-            paddingLeft: '55px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <input
-            id='upload'
-            type='file'
-            accept='.csv, .tsv, .txt, .xls, .xlsx'
-            onChange={handleFileLoad}
-            style={{ color: 'transparent' }}
-            onDrop={e => console.log('dropped')}
-          />
-          <label
-            for='file'
-            style={{ position: 'absolute', marginLeft: '60px', fontSize: '14px', textAlign: 'left', minWidth: '100px' }}
-          >
-            {file ? file.name : 'No file chosen'}
-          </label>
-        </div>
+        <FancyFileInput 
+          onChange={handleFileLoad}
+          accept='.csv, .tsv, .txt, .xls, .xlsx'
+          icon={<HiOutlineUpload size={200} color='#008eff' />}
+        />
+        <p>{file ? file.name : 'No file chosen'}</p>
         <p className='mt-4' style={{ fontSize: '12px', color: '#9ea2a8' }}>Accepts .CSV, .TSV, .TXT, .XLS, .XLSX</p>
       </div>
     </div>
