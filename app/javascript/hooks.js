@@ -5,7 +5,7 @@ export function useUploads() {
   return (
     useQuery(
       'uploads',
-      async () => await (await fetch('/uploads')).json()
+      async () => await (await fetch('/api/uploads')).json()
     )
   )
 }
@@ -15,7 +15,7 @@ export function useCreateData() {
 
   return (
     useMutation(
-      data => axios.post(`/data`, data),
+      data => axios.post(`/api/data`, data),
       {
         onSettled: () => {
           queryClient.invalidateQueries('uploads')
@@ -33,7 +33,7 @@ export function useDeleteData() {
 
   return (
     useMutation(
-      data => axios.delete(`/data/${parseInt(data.id)}`, data),
+      data => axios.delete(`/api/data/${parseInt(data.id)}`, data),
       {
         onSettled: () => {
           queryClient.invalidateQueries('uploads')
@@ -47,7 +47,7 @@ export function useGetData(id) {
   return (
     useQuery(
       ['getData', id],
-      async () => axios.get(`/data/${id}`)
+      async () => axios.get(`/api/data/${id}`)
     )
   )
 }

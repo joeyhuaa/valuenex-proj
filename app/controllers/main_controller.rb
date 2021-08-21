@@ -21,10 +21,7 @@ class MainController < ApplicationController
 
   def get_data
     @data = Data.find(params[:id])
-    render :json => {
-      filename: @data.filename,
-      data: @data.assigned_data
-    }
+    render :json => @data
   end
 
   def delete_data

@@ -9,6 +9,10 @@ import DataView from './DataView'
 function App() {
 	const { pathname } = useLocation()
 
+	useEffect(() => {
+		console.log(pathname)
+	}, [pathname])
+
 	return (
 		<div style={{ display: 'flex', width: '100%' }}>
 			<Sidebar />
